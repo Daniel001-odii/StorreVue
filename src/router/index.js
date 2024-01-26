@@ -15,6 +15,8 @@ import StoreVue from '@/views/Store.vue';
 import ActivityListVue from '@/views/ActivityList.vue';
 import ReportsAnalysisVue from '@/views/ReportsAnalysis.vue';
 import PageNotFound from '../views/PageNotFound.vue'
+import NotificationsVue from '../views/Notifications.vue';
+
 
 const routes = [
   {path: '/', name: 'home', component: HomeView},
@@ -35,6 +37,7 @@ const routes = [
   {path: '/stores/:storeId', name: 'my store', component: StoreVue},
   {path: '/products', name: 'products', component: ProductListVue},
   {path: '/reports', name: 'reports', component: ReportsAnalysisVue},
+  {path: '/notifications', name: 'notifications', component: NotificationsVue},
 
   {path: '/support', name: 'support', component: ActivityVue},
 

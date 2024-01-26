@@ -11,9 +11,10 @@
             <span class="fs-3">{{ customer.name }}</span>
             <span class="fs-6">{{ customer.email }} - {{ customer.contact }}</span>
           </div>
-          <div class="st_cc_stuff_2" v-if="customer.contact">
-            <i class="bi bi-telephone-fill"></i>
-            <i class="bi bi-whatsapp"></i>
+          <div class="st_cc_stuff_2">
+            <i v-if="customer.contact" class="bi bi-telephone-fill"></i>
+            <i v-if="customer.contact" class="bi bi-whatsapp"></i>
+            <i v-if="customer.email" class="bi bi-envelope-fill"></i>
           </div>
         </div>
       </div>
@@ -42,7 +43,7 @@ import  axios from 'axios'
                     this.customers = response.data.user.customers;
 
                     this.isRealUser = true;
-                    this.userDefaultStore = this.user.stores[0];
+                    this.currentStore = this.user.stores[0];
                     console.log(this.user);
                 }
                 catch(error){
@@ -85,6 +86,7 @@ import  axios from 'axios'
   flex-direction: column;
 }
 .st_dummy_profile_thumb{
+    background: #0e26af;
     height: 50px;
     width: 50px;
     display: flex;

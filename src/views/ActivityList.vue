@@ -1,6 +1,8 @@
 <template>
   <Loader v-if="loading"/>
+  
 <div class="container mt-5 text-start">
+  <LeftNav/>
   <h1>Your Activities</h1>
   <!-- {{ userActivity }} -->
 
@@ -61,7 +63,7 @@
   <ul class="dropdown-menu">
     <li><RouterLink class="dropdown-item" :to="'/activity/' + activity._id"><i class="bi bi-receipt-cutoff"></i> View</RouterLink></li>
     <li><RouterLink class="dropdown-item" :to="'/activity/' + activity._id"><i class="bi bi-pencil-fill"></i> Edit</RouterLink></li>
-    <li><RouterLink class="dropdown-item" to="#"><i class="bi bi-trash-fill"></i> Delete</RouterLink></li>
+    <li @click="deleteActivity(activity._id)"><i class="bi bi-trash-fill"></i> Delete</li>
   </ul>
   </div>
 
@@ -74,17 +76,18 @@
 <script>
 import axios from 'axios'
 import Loader from '@/components/Loader.vue';
+import LeftNav from '@/components/LeftNav.vue'
 
   export default {
     components:{
-      Loader
+      Loader, LeftNav
     },  
     data(){
       return{
         user: '',
         userActivity: '',
         loading: null,
-        userDefaultStore: '',
+        currentStore: '',
       }
     },
     methods:{
@@ -102,7 +105,7 @@ import Loader from '@/components/Loader.vue';
                     this.user = response.data.user;
                     // this.userSettings = this.user;
                     // this.isRealUser = true;
-                    this.userDefaultStore = this.user.stores[0]._id;
+                    this.currentStore = this.user.stores[0]._id;
                     console.log(this.user);
                     this.getActivities();
                     // loader...
@@ -123,7 +126,7 @@ import Loader from '@/components/Loader.vue';
                     Authorization: `JWT ${token}`
                 }
                 try{
-                    const response = await axios.get(`${this.api_url}/activities/${this.userDefaultStore}`, {headers});
+                    const response = await axios.get(`${this.api_url}/activities/store/${this.currentStore}`, {headers});
                     this.userActivity = response.data.allActivities.reverse();
                     console.log(response);
                     // now get all users total...
@@ -135,6 +138,21 @@ import Loader from '@/components/Loader.vue';
                   this.loading = false;
                 }
        },
+
+      // delete an activity...
+      async deleteActivity(activityId){
+        const token = localStorage.getItem("uselessToken");
+                const headers = {
+                    Authorization: `JWT ${token}`
+                }
+        try{
+          const response = await axios.delete(`${this.api_url}/activities/${this.currentStore}/${activityId}`, {headers});
+          console.log(response)
+        }
+        catch(error){
+
+        }
+      },  
 
       formatCurrency(value){
           const formattedValue = new Intl.NumberFormat('en-US').format(value);

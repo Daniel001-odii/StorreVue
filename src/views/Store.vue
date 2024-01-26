@@ -167,7 +167,7 @@
 <div v-if="newCustomerModal" class="st_modal_container">
     <div class="st_modal">
         <div class="modal_header fs-3">
-            <span>Add a new customer to your store</span>
+            <span>Add a new customer</span>
             <span class="close_btn"  @click="newCustomerModal = !newCustomerModal">&times;</span>
         </div>
         <div class="st_modal_content">
@@ -224,13 +224,13 @@
                 </div>
             </div>
 
-            <div class="dashboard_stat">
+            <!-- <div class="dashboard_stat">
                 <i class="bi bi-people-fill"></i>
                 <div class="dashboard_stat_inner" v-if="user.customers">
                     <div class="db_stat_number">{{ user.customers.length }}</div>
                     <div class="db_stat_title">New Customers</div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="dashboard_stat">
                 <i class="bi bi-shop"></i>
@@ -308,7 +308,7 @@ import Loader from '../components/Loader.vue'
         data(){
             return{
                 user: '',
-                userDefaultStore: '',
+                currentStore: '',
                 activity: {
                     amount: '',
                     type: '',
@@ -363,7 +363,7 @@ import Loader from '../components/Loader.vue'
                     this.user = response.data.user;
                     this.userSettings = this.user;
                     this.isRealUser = true;
-                    this.userDefaultStore = this.$route.params.storeId;
+                    this.currentStore = this.$route.params.storeId;
                     console.log(this.user);
 
                     this.getActivities();
@@ -404,7 +404,7 @@ import Loader from '../components/Loader.vue'
                     Authorization: `JWT ${token}`
                 }
                 try{
-                    const response = await axios.get(`${this.api_url}/activities/${this.userDefaultStore}/totals`, {headers});
+                    const response = await axios.get(`${this.api_url}/activities/${this.currentStore}/totals`, {headers});
                     this.total_income.allProducts = response.data.products;
                     this.total_income.today = response.data.todaySales;
                     this.total_income.thisWeek = response.data.thisWeekSales;
@@ -426,7 +426,7 @@ import Loader from '../components/Loader.vue'
             // get current store detail...
             async getStore(){
                 try{
-                    const response = await axios.get(`${this.api_url}/stores/${this.userDefaultStore}`);
+                    const response = await axios.get(`${this.api_url}/stores/${this.currentStore}`);
                     this.store = response.data.data;
                     // console.log("current store details: ", response);
                 }
@@ -442,7 +442,7 @@ import Loader from '../components/Loader.vue'
                 console.log(headers)
 
                 try{
-                    const response = await axios.post(`${this.api_url}/products/${this.userDefaultStore}`, this.product, {headers});
+                    const response = await axios.post(`${this.api_url}/products/${this.currentStore}`, this.product, {headers});
                     console.log("product created: ", response);
                 }
                 catch(error){
@@ -458,7 +458,7 @@ import Loader from '../components/Loader.vue'
                 }
                 try{
                     console.log(this.activity)
-                    const response = await axios.post(`${this.api_url}/activities/${this.userDefaultStore}`, this.activity, {headers});
+                    const response = await axios.post(`${this.api_url}/activities/${this.currentStore}`, this.activity, {headers});
                     // console.log(response);
                     // close the modal and reload data...
                     this.activityModal = !this.activityModal;

@@ -70,7 +70,7 @@ import Loader from '@/components/Loader.vue';
         user: '',
         userstore: '',
         loading: null,
-        userDefaultStore: '',
+        currentStore: '',
 
         userStores: '',
         newStoreModal: false,
@@ -93,7 +93,7 @@ import Loader from '@/components/Loader.vue';
                     this.user = response.data.user;
                     // this.userSettings = this.user;
                     // this.isRealUser = true;
-                    this.userDefaultStore = response.data.user.stores[0];
+                    this.currentStore = response.data.user.stores[0];
                     this.userStores = response.data.user.stores;
                     console.log(this.user);
                     this.getActivities();

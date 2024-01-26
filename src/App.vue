@@ -1,5 +1,5 @@
 <template>
-<Navbar/>
+<!-- <Navbar/> -->
 
 <router-view/>
 
@@ -24,7 +24,8 @@ export default{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /* background: #f6f6f6; */
+  /* background: radial-gradient(179.04% 116.22% at 12.15% 93.6%, #E7E3FF 9.5%, #F5F6F9 50.24%, #FFE7E3 100%); */
+  background: #fff;
 }
 
 

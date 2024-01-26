@@ -1,13 +1,15 @@
 <template>
-
+<LeftNav/>
 </template>
 
 <script>
+import LeftNav from '@/components/LeftNav.vue';
   export default {
+    components:{LeftNav},
       mounted(){
-        if(localStorage.getItem("uselessToken")){
-          this.$router.push('/dashboard')
-        }
+        // if(localStorage.getItem("uselessToken")){
+        //   this.$router.push('/dashboard')
+        // }
       }
   }
 </script>

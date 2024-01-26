@@ -1,5 +1,5 @@
 <template>
-
+<Loader v-if="loading"/>
 <div v-if="activityModal" class="st_modal_container">
     <div class="st_modal">
         <form @submit.prevent="newActivity">
@@ -52,16 +52,14 @@
 
 </div>
 
-<div class="container mt-5 text-start">
+<div v-if="!loading" class="container mt-5 text-start">
         <h1 class="fw-bolder">Activity Details</h1>
-        <p v-if="isLoading">Loading...</p>
-        <div v-if="!isLoading">
 
         <p>activity {{ this.$route.params.activityId }}</p>
         <div>
             <!-- <span class="badge text-bg-success">{{ userActivity.paymentStatus }}</span> -->
 
-            <h3>{{ userActivity.product }}</h3>
+            <h3 v-if="userActivity.product">{{ userActivity.product.name }}</h3>
             <h3>#{{ userActivity.amount }}</h3>
             <div class="d-flex" :class="userActivity.activityType ">{{ userActivity.activityType }}</div>
             <div class="d-flex tag" :class="userActivity.paymentStatus">{{ userActivity.paymentStatus }}</div>
@@ -75,16 +73,16 @@
             <h5>{{ userActivity.date }}</h5>
             </div>
         </div>
-
-        <!-- {{ userActivity }} -->
-        </div>
 </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Loader from '@/components/Loader.vue';
+
 
     export default {
+        components: {Loader},
         data(){
             return{
                 user: '',
@@ -99,7 +97,7 @@ import axios from 'axios';
                 activityModal: false,
                 userActivity: '',
 
-                isLoading: null,
+                loading: true,
             }
         },
         computed:{
@@ -111,6 +109,7 @@ import axios from 'axios';
         methods:{
             // gets user details via api
             async getUser(){
+                this.loading = true;
                 const token = localStorage.getItem("uselessToken");
                 const headers = {
                     Authorization: `JWT ${token}`
@@ -120,11 +119,32 @@ import axios from 'axios';
                     this.user = response.data.user;
                     this.userSettings = this.user;
                     this.isRealUser = true;
+                    
+                    this.getActivityById();
+                    this.loading = false;
                 }
                 catch(error){
                     console.log(error);
+                    this.loading = false;
                 }
             },
+
+            // get all users activities....
+            async getActivityById(){
+                const token = localStorage.getItem("uselessToken");
+                const headers = {
+                    Authorization: `JWT ${token}`
+                }
+                try{
+                    const response = await axios.get(`${this.api_url}/activities/${this.$route.params.activityId}`, {headers});
+                    this.userActivity = response.data.activity;
+                    console.log("detailed activity: ", response);
+                }
+                catch(error){
+                    this.isloading = false;
+                }
+            },
+
 
             // record new activity...
             async newActivity(){
@@ -145,23 +165,6 @@ import axios from 'axios';
                 }
             },
 
-            // get all users activities....
-            async getActivityById(){
-                this.isLoading = true;
-                const token = localStorage.getItem("uselessToken");
-                const headers = {
-                    Authorization: `JWT ${token}`
-                }
-                try{
-                    const response = await axios.get(`${this.api_url}/activity/${this.$route.params.activityId}`, {headers});
-                    this.userActivity = response.data.activity;
-                    console.log(response);
-                    this.isLoading = false;
-                }
-                catch(error){
-                    this.isLoading = false;
-                }
-            },
 
             formatTimestamp(timestamp) {
                 const date = new Date(timestamp);
@@ -172,7 +175,7 @@ import axios from 'axios';
         },
 
         mounted(){
-            this.getActivityById();
+            this.getUser();
         }
     }
 </script>
